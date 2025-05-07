@@ -1,0 +1,68 @@
+/* تحسين الألوان والتصميم */
+body {
+    font-family: 'Cairo', sans-serif;
+    background: linear-gradient(135deg, #2d2d2d, #3b3b3b);
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    width: 90%;
+    margin: 20px auto;
+    backdrop-filter: blur(15px);
+}
+
+h2 {
+    color: #ffcc00;
+    margin-bottom: 20px;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 12px 0;
+    border: 1px solid #ffcc00;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 16px;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #ff7b00, #ffcc00);
+    border: none;
+    border-radius: 25px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background: linear-gradient(135deg, #ff8800, #ffdd44);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px);
+}
+
+.small-button {
+    width: 80%;
+    font-size: 14px;
+    padding: 10px;
+    background: linear-gradient(135deg, #444, #666);
+    margin-top: 8px;
+}
+
+.small-button:hover {
+    background: linear-gradient(135deg, #555, #777);
+}

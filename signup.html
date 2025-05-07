@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل حساب جديد</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- ✅ تحميل Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <!-- ✅ مكتبة SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="main.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2>تسجيل حساب جديد</h2>
+        <input type="text" id="username" placeholder="اسم المستخدم">
+        <input type="text" id="phoneNumber" placeholder="رقم الهاتف">
+        <input type="password" id="password" placeholder="كلمة المرور">
+        <input type="password" id="confirmPassword" placeholder="تأكيد كلمة المرور">
+        <button onclick="signUp()">إنشاء حساب</button>
+
+        <!-- حقل OTP (سيظهر فقط بعد إرسال OTP) -->
+        <div id="otpSection" style="display:none;">
+            <input type="text" id="otp" placeholder="أدخل الكود المرسل">
+            <button onclick="verifyOtp()">تحقق من OTP</button>
+        </div>
+
+        <!-- حاوية reCAPTCHA -->
+        <div id="recaptcha-container"></div>
+
+        <button class="small-button" onclick="window.location.href='login.html'">لديك حساب؟</button>
+    </div>
+</body>
+</html>

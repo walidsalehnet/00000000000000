@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل الدخول</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- تحميل Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+  <!-- ✅ تحميل SweetAlert2 قبل main.js -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="main.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h2>تسجيل الدخول</h2>
+    <input type="text" id="phoneNumber" placeholder="رقم الهاتف">
+    <input type="password" id="password" placeholder="كلمة المرور">
+    <button onclick="login()">تسجيل الدخول</button>
+    <button class="small-button" onclick="window.location.href='signup.html'">إنشاء حساب</button>
+  </div>
+</body>
+</html>

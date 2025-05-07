@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حسابي</title>
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- ✅ تحميل Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <style>
+        /* ✅ إعدادات الصفحة العامة */
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            position: relative;
+        }
+        /* ✅ أنيميشن لاسم الموقع */
+        .logo {
+            font-size: 5vw;
+            font-weight: bold;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeIn 1.5s ease-out forwards;
+            background: linear-gradient(45deg, #ff512f, #dd2476);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding: 25px;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+        /* ✅ تأثير ثلاثي الأبعاد للبروفايل */
+        .profile-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #ffcc00;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            cursor: pointer;
+            box-shadow: 0px 4px 15px rgba(255, 204, 0, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .profile-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0px 6px 20px rgba(255, 204, 0, 0.8);
+        }
+
+        /* ✅ إظهار البيانات عند الضغط */
+        .profile-info {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.2);
+            width: 250px;
+            text-align: center;
+        }
+
+        .wallet-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.2);
+            width: 250px;
+            margin: 10px 0;
+        }
+/* ✅ تصميم أيقونة الإشعارات */
+.notifications {
+    position: relative;
+    cursor: pointer;
+    font-size: 24px;
+    background: #ffcc00;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 4px 15px rgba(255, 204, 0, 0.5);
+}
+
+.notification-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: red;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ✅ قائمة الإشعارات */
+.notification-list {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    width: 300px;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0px 4px 15px rgba(255, 204, 0, 0.3);
+}
+
+.notification-item {
+    padding: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: right;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+        /* ✅ أزرار التحكم */
+        .services button, .logout-button {
+            width: 200px;
+            padding: 12px;
+            margin: 10px;
+            border-radius: 25px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            font-weight: bold;
+        }
+
+        .services button {
+            background: linear-gradient(45deg, #ff512f, #dd2476);
+            color: white;
+            box-shadow: 0px 4px 10px rgba(255, 0, 0, 0.3);
+        }
+
+        .services button:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 6px 15px rgba(255, 0, 0, 0.5);
+        }
+
+        .logout-button {
+            background: linear-gradient(45deg, #1a73e8, #0066ff);
+            color: white;
+            box-shadow: 0px 4px 10px rgba(0, 102, 255, 0.3);
+        }
+
+        .logout-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 6px 15px rgba(0, 102, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+  <!-- ✅ اسم الموقع بانميشن -->
+  <div class="logo">WEDOO NET</div>
+
+    <!-- ✅ أيقونة البروفايل -->
+    <div class="profile-container">
+        <div class="profile-icon" onclick="toggleProfileInfo()">👤</div>
+        <div class="profile-info" id="profile-info">
+            <p>👤 <strong>الاسم:</strong> <span id="user-username">---</span></p>
+            <p>📧 <strong>البريد:</strong> <span id="user-email">---</span></p>
+        </div>
+    </div>
+
+
+    <!-- ✅ بطاقة الرصيد -->
+    <div class="wallet-card">
+        <h2>💰 رصيدك الحالي</h2>
+        <p id="user-wallet">0 جنيه</p>
+    </div>
+
+    <!-- ✅ الخدمات المتاحة -->
+    <div class="services">
+        <button onclick="location.href='recharge.html'">⚡ شحن الرصيد</button>
+        <button onclick="location.href='withdraw.html'">💸 سحب الرصيد</button>
+        <button onclick="location.href='order.html'">📦 الطلبات</button>
+        <button onclick="location.href='serves.html'">🔗 الدخول للخدمات</button>
+    </div>
+
+    <hr>
+
+    <button class="logout-button" onclick="logout()">🚪 تسجيل الخروج</button>
+
+    <!-- ✅ تحميل ملف الجافاسكريبت -->
+    <script src="main.js"></script>
+
+    <script>
+        function toggleProfileInfo() {
+            let info = document.getElementById("profile-info");
+            if (info.style.display === "none" || info.style.display === "") {
+                info.style.display = "block";
+            } else {
+                info.style.display = "none";
+            }
+        }
+        (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="wkSAhNitvFuvcjx_ZhDGs";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
+  
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                const userRef = firebase.firestore().collection("users").doc(user.uid);
+    
+                userRef.get().then((doc) => {
+                    if (doc.exists) {
+                        let walletBalance = doc.data().wallet || 0;
+                        let username = doc.data().username || "مستخدم غير معروف";
+                        let email = user.email || "غير متوفر";
+    
+                        document.getElementById("user-wallet").innerText = walletBalance + " جنيه";
+                        document.getElementById("user-username").innerText = username;
+                        document.getElementById("user-email").innerText = email;
+                    } else {
+                        console.error("❌ لا يوجد بيانات للمستخدم في Firestore!");
+                    }
+                }).catch((error) => {
+                    console.error("❌ خطأ في جلب بيانات المستخدم:", error);
+                });
+            } else {
+                console.log("❌ لم يتم تسجيل الدخول!");
+            }
+        });
+        function toggleNotifications() {
+    let list = document.getElementById("notificationList");
+    list.style.display = (list.style.display === "none" || list.style.display === "") ? "block" : "none";
+}
+
+function loadNotifications(userId) {
+    const notificationCount = document.getElementById("notificationCount");
+    const notificationList = document.getElementById("notificationList");
+
+    firebase.firestore().collection("notifications").where("userId", "==", userId).orderBy("createdAt", "desc").onSnapshot(snapshot => {
+        let count = snapshot.docs.length;
+        notificationCount.innerText = count;
+        notificationCount.style.display = count > 0 ? "flex" : "none";
+
+        notificationList.innerHTML = "";
+        snapshot.forEach(doc => {
+            let data = doc.data();
+            let notificationItem = document.createElement("div");
+            notificationItem.classList.add("notification-item");
+            notificationItem.innerText = data.message;
+            notificationList.appendChild(notificationItem);
+        });
+    });
+}
+
+firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+        loadNotifications(user.uid);
+    }
+});
+
+        function logout() {
+            firebase.auth().signOut().then(() => {
+                alert("تم تسجيل الخروج بنجاح!");
+                window.location.href = "login.html";
+            }).catch((error) => {
+                console.error("❌ خطأ أثناء تسجيل الخروج:", error);
+            });
+        }
+    </script>
+
+</body>
+</html>
