@@ -59,6 +59,35 @@ async function sendOtp(phoneNumber, name) {
     console.error(error);
   }
 }
+// دالة للتحقق من صحة رقم الهاتف
+function validatePhoneNumber(phoneNumber) {
+    const phonePattern = /^\+?[1-9]\d{1,14}$/; // نمط للتحقق من تنسيق الرقم
+    return phonePattern.test(phoneNumber);
+}
+
+function sendOtp() {
+    const phoneNumber = document.getElementById('phoneNumber').value;
+
+    if (!validatePhoneNumber(phoneNumber)) {
+        alert('❌ رقم الهاتف غير صحيح. تأكد من إضافة رمز الدولة.');
+        return;
+    }
+
+    // باقي الكود لإرسال OTP بعد التحقق من الرقم
+    const appVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+        size: 'invisible'
+    });
+
+    firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+        .then((confirmationResult) => {
+            window.confirmationResult = confirmationResult;
+            alert('✅ تم إرسال الكود إلى رقم الهاتف');
+            document.getElementById('otpSection').style.display = 'block'; // إظهار حقل OTP
+        })
+        .catch((error) => {
+            alert('❌ فشل في إرسال الكود: ' + error.message);
+        });
+}
 
 // ✅ إنشاء حساب
 // دالة للتحقق من المدخلات
